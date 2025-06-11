@@ -36,6 +36,10 @@
             <h1 class="text-4xl sm:text-5xl font-serif font-bold text-white tracking-wider">Hardy Getaway</h1>
             <p class="mt-3 text-lg text-gray-300">A Gift of Appreciation for our Pastor & First Lady</p>
         </header>
+
+        <div id="global-actions" class="text-center mb-8 px-4 sm:px-6">
+            <!-- Global "Add to Calendar" button will be injected here -->
+        </div>
         
         <div class="flex flex-row space-x-0 lg:space-x-8 p-4 sm:p-6">
 
@@ -204,16 +208,64 @@
 
         const itineraryList = document.getElementById('itinerary-list');
         
-        function generateGoogleCalendarLink(item) {
-            const base = 'https://www.google.com/calendar/render?action=TEMPLATE';
-            const eventDate = new Date(`2025-06-${item.day.includes('13') ? '13' : '14'} ${item.time} CDT`);
-            if (isNaN(eventDate.getTime())) return '#'; 
-            const startTime = eventDate.toISOString().replace(/-|:|\.\d{3}/g, '');
-            eventDate.setMinutes(eventDate.getMinutes() + item.duration);
-            const endTime = eventDate.toISOString().replace(/-|:|\.\d{3}/g, '');
-            const details = `Description: ${item.description}\n\n${item.notes ? 'Notes: ' + item.notes.replace(/<br>/g, '\n') : ''}`;
-            const params = new URLSearchParams({ text: item.title, dates: `${startTime}/${endTime}`, details: details, location: item.address || item.location });
-            return `${base}&${params.toString()}`;
+        function convertToICSDate(dayStr, timeStr, duration) {
+            const day = parseInt(dayStr.match(/\d+/)[0]);
+            let [time, modifier] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':');
+
+            hours = parseInt(hours);
+            minutes = parseInt(minutes);
+
+            if (modifier === 'PM' && hours < 12) hours += 12;
+            if (modifier === 'AM' && hours === 12) hours = 0; // Midnight case
+
+            // Create date object assuming Austin's timezone (CDT = UTC-5 in June)
+            // We specify UTC components then adjust, which is more reliable than parsing timezone strings
+            const startDate = new Date(Date.UTC(2025, 5, day, hours + 5, minutes)); // June is month 5
+            const endDate = new Date(startDate.getTime() + duration * 60000);
+
+            const format = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+            return { start: format(startDate), end: format(endDate) };
+        }
+
+        function downloadICSFile() {
+            let icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Gemini//Hardy Getaway//EN',
+            ];
+
+            itineraryData.forEach((item, index) => {
+                const { start, end } = convertToICSDate(item.day, item.time, item.duration);
+                const description = item.description.replace(/<br>/g, '\\n');
+                const notes = item.notes ? `\\n\\nNotes:\\n${item.notes.replace(/<br>/g, '\\n')}` : '';
+
+                icsContent.push(
+                    'BEGIN:VEVENT',
+                    `UID:${start}-${index}@hardygetaway.com`,
+                    `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}`,
+                    `DTSTART:${start}`,
+                    `DTEND:${end}`,
+                    `SUMMARY:${item.title}`,
+                    `DESCRIPTION:${description}${notes}`,
+                    `LOCATION:${item.address || item.location}`,
+                    'END:VEVENT'
+                );
+            });
+            
+            icsContent.push('END:VCALENDAR');
+            const icsFile = icsContent.join('\r\n');
+
+            const blob = new Blob([icsFile], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Hardy_Getaway_Itinerary.ics';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function renderItineraryList() {
@@ -270,11 +322,6 @@
 
             const linksContainer = document.getElementById('detail-links');
             linksContainer.innerHTML = ''; 
-
-            const calendarLink = generateGoogleCalendarLink(item);
-            if (calendarLink !== '#') {
-                 linksContainer.appendChild(createLinkElement({ name: 'Add to Google Calendar', url: calendarLink, type: 'calendar' }));
-            }
            
             if (item.links && item.links.length > 0) {
                 item.links.forEach(link => {
@@ -312,6 +359,17 @@
             if(firstItem) {
                 firstItem.classList.add('active-item');
             }
+            
+            // Create and add the global calendar button
+            const globalActionsContainer = document.getElementById('global-actions');
+            const calendarButton = document.createElement('button');
+            calendarButton.className = 'inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-gray-900 bg-amber-400 hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-amber-500 transition-colors';
+            calendarButton.innerHTML = `
+                ${icons.calendar.replace('w-5 h-5', 'w-6 h-6').replace('stroke="currentColor"','stroke="currentColor" class="mr-3"')}
+                Add All Events to Calendar
+            `;
+            calendarButton.addEventListener('click', downloadICSFile);
+            globalActionsContainer.appendChild(calendarButton);
         });
     </script>
 </body>
