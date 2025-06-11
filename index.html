@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Getaway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Style for the active itinerary item in the sidebar */
+        .active-item {
+            border-color: #f59e0b !important; /* amber-500 */
+            background-color: #374151 !important; /* bg-gray-700 */
+            transform: translateY(0) !important;
+        }
+        .header-bg {
+            background-image: linear-gradient(to top, rgba(17, 24, 39, 1) 0%, rgba(17, 24, 39, 0.8) 50%, rgba(17, 24, 39, 1) 100%), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1974&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="text-center py-12 px-4 mb-8 rounded-b-xl header-bg shadow-2xl">
+            <h1 class="text-4xl sm:text-5xl font-serif font-bold text-white tracking-wider">A Special Getaway</h1>
+            <p class="mt-3 text-lg text-gray-300">A Gift of Appreciation for our Pastor & First Lady</p>
+        </header>
+        
+        <div class="flex flex-row space-x-0 lg:space-x-8 p-4 sm:p-6">
+
+            <!-- Itinerary List (Sidebar) -->
+            <div id="main-view" class="w-24 lg:w-1/3 flex-shrink-0">
+                <main id="itinerary-list" class="space-y-4 lg:space-y-6">
+                    <!-- Itinerary items will be dynamically injected here -->
+                </main>
+            </div>
+
+            <!-- Detail View (Main content) -->
+            <div id="detail-view-container" class="flex-grow">
+                 <div id="detail-view" class="bg-gray-800 p-5 sm:p-6 rounded-xl shadow-lg space-y-6 sticky top-6">
+                    <!-- Detail Content (populated by JS) -->
+                    <div id="detail-content">
+                        <header class="mb-6">
+                            <h2 id="detail-title" class="text-3xl sm:text-4xl font-serif font-bold text-white"></h2>
+                            <p id="detail-time-location" class="text-md text-gray-400 mt-2"></p>
+                        </header>
+        
+                        <p id="detail-description" class="text-gray-300 leading-relaxed"></p>
+        
+                        <div id="detail-notes-container" class="hidden">
+                            <h3 class="font-semibold text-white border-b border-gray-700 pb-2 mb-3">Details & Confirmations</h3>
+                            <div id="detail-notes" class="text-sm text-gray-300 bg-gray-900 p-4 rounded-lg"></div>
+                        </div>
+                        
+                        <div id="detail-links" class="space-y-3">
+                            <!-- Action links will be injected here -->
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const itineraryData = [
+            {
+                day: 'Friday, June 13th',
+                time: '10:45 AM',
+                title: 'Chauffeur Pick-up',
+                location: "Judah's Java",
+                address: '811 East Pierce Street, Luling TX 78648',
+                description: 'Your private driver will meet you to begin your 24-hour escape. Enjoy provided premium morning beverages as you are chauffeured to the hotel.',
+                duration: 60,
+                notes: "Booking #29427326",
+                links: [
+                    { name: 'Echelon Website', url: 'https://www.echelonlimo.com/', type: 'website' },
+                    { name: 'Call Echelon', url: 'tel:+1-512-219-9447', type: 'phone' }
+                ]
+            },
+            {
+                day: 'Friday, June 13th',
+                time: '12:00 PM',
+                title: 'Hotel Check-In',
+                location: 'W Austin Hotel',
+                address: '200 Lavaca St, Austin, TX 78701',
+                description: 'Arrive at the W Austin Hotel where your special room has been arranged and stocked for you. Your reservation is on file at the front desk.',
+                duration: 15,
+                notes: "Reservation information will be provided separately.",
+                links: [
+                    { name: 'Visit Hotel Website', url: 'https://www.marriott.com/en-us/hotels/auswh-w-austin/', type: 'website' },
+                    { name: 'View on Map', url: 'https://maps.google.com/?q=200+Lavaca+St,+Austin,+TX+78701', type: 'map' }
+                ]
+            },
+            {
+                day: 'Friday, June 13th',
+                time: '12:15 PM',
+                title: 'Lunch Reservation at Serenade',
+                location: 'Inside the W Hotel',
+                address: '200 Lavaca St, Austin, TX 78701',
+                description: 'Enjoy a delicious lunch to kick off the celebration. An included gift card will cover the cost.',
+                duration: 90,
+                notes: "Confirmation #8361",
+                links: [
+                    { name: 'Visit Restaurant Website', url: 'https://www.serenadeaustin.com/', type: 'website' },
+                    { name: 'View Breakfast Menu (PDF)', url: 'https://static1.squarespace.com/static/669034cc9533c7126889bbc4/t/680ff52078936e0df45ae0ac/1745876256518/Serenade+Brasserie+Breakfast+4.24.25.pdf', type: 'menu' },
+                    { name: 'View All-Day Menu (PDF)', url: 'https://static1.squarespace.com/static/669034cc9533c7126889bbc4/t/680ff568fa777d30b2ac3ec2/1745876328498/Serenade+All+Day+4.24.25.pdf', type: 'menu' }
+                ]
+            },
+            {
+                day: 'Friday, June 13th',
+                time: '2:00 PM',
+                title: 'Couple\'s Massage',
+                location: 'AWAY Spa',
+                address: '200 Lavaca St, Austin, TX 78701',
+                description: 'Unwind and rejuvenate together with a luxurious 90-minute massage experience designed for two.',
+                duration: 90,
+                notes: "Pastor: #111226804<br>First Lady: #111226807",
+                links: [
+                    { name: 'Visit Spa Website', url: 'https://www.awayspaaustin.com/', type: 'website' }
+                ]
+            },
+            {
+                day: 'Friday, June 13th',
+                time: '4:40 PM',
+                title: 'Chauffeur Pick-up',
+                location: 'W Hotel Lobby',
+                address: '200 Lavaca St, Austin, TX 78701',
+                description: "Your driver will be waiting to chauffeur you to Uchiko for dinner",
+                duration: 20,
+                notes: null,
+                links: []
+            },
+            {
+                day: 'Friday, June 13th',
+                time: '5:00 PM',
+                title: 'Dinner Reservation at Uchiko',
+                location: 'A short drive away',
+                address: '4200 N Lamar Blvd, Austin, TX 78756',
+                description: 'Prepare your taste buds for an acclaimed and innovative Japanese dining experience. The cost is fully covered.',
+                duration: 120,
+                notes: "Reservation #4MVN7F32J6RT (booked under Nashid Braswell)<br>Spare no expense or indulgence - the cost will be fully covered.",
+                links: [
+                    { name: 'Visit Restaurant Website', url: 'https://uchiko.uchirestaurants.com/location/sushi-austin/', type: 'website' },
+                    { name: 'View Menu', url: 'https://uchiko.uchirestaurants.com/location/sushi-austin/menu/', type: 'menu' },
+                    { name: 'View on Map', url: 'https://maps.google.com/?q=4200+N+Lamar+Blvd,+Austin,+TX+78756', type: 'map' }
+                ]
+            },
+            {
+                day: 'Friday, June 13th',
+                time: '8:00 PM',
+                title: 'Andrea Bocelli Concert',
+                location: 'Moody Center',
+                address: '2001 Robert Dedman Dr, Austin, TX 78712',
+                description: 'An enchanting evening awaits as you enjoy the breathtaking vocal performance of the legendary Andrea Bocelli. Your driver knows the best drop-off and pick-up locations.',
+                duration: 180,
+                notes: "Ticketmaster tickets have been transferred.<br>Section 107, Row M, Seat 13<br>Section 107, Row M, Seat 14",
+                links: [
+                    { name: 'Visit Venue Website', url: 'https://moodycenteratx.com/', type: 'website' },
+                    { name: 'View on Map', url: 'https://maps.google.com/?q=2001+Robert+Dedman+Dr,+Austin,+TX+78712', type: 'map' }
+                ]
+            },
+            {
+                day: 'Saturday, June 14th',
+                time: '12:00 PM',
+                title: 'Hotel Check-Out & Drop-Off',
+                location: 'W Hotel Lobby',
+                address: '200 Lavaca St, Austin, TX 78701',
+                description: "After a restful morning, your driver will be ready to take you back to Judah's Java. Afterwards, the Sabbath is yours to enjoy together.",
+                duration: 60,
+                notes: null,
+                links: []
+            }
+        ];
+
+        const icons = {
+            website: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>`,
+            map: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`,
+            menu: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>`,
+            calendar: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>`,
+            phone: `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>`
+        };
+
+        const itineraryList = document.getElementById('itinerary-list');
+        
+        function generateGoogleCalendarLink(item) {
+            const base = 'https://www.google.com/calendar/render?action=TEMPLATE';
+            const eventDate = new Date(`2025-06-${item.day.includes('13') ? '13' : '14'} ${item.time} CDT`);
+            if (isNaN(eventDate.getTime())) return '#'; 
+            const startTime = eventDate.toISOString().replace(/-|:|\.\d{3}/g, '');
+            eventDate.setMinutes(eventDate.getMinutes() + item.duration);
+            const endTime = eventDate.toISOString().replace(/-|:|\.\d{3}/g, '');
+            const details = `Description: ${item.description}\n\n${item.notes ? 'Notes: ' + item.notes.replace(/<br>/g, '\n') : ''}`;
+            const params = new URLSearchParams({ text: item.title, dates: `${startTime}/${endTime}`, details: details, location: item.address || item.location });
+            return `${base}&${params.toString()}`;
+        }
+
+        function renderItineraryList() {
+            let currentDay = '';
+            itineraryList.innerHTML = '';
+            itineraryData.forEach((item, index) => {
+                if (item.day !== currentDay) {
+                    currentDay = item.day;
+                    const dayHeader = document.createElement('h2');
+                    dayHeader.className = 'text-xl font-bold text-gray-200 pb-2 border-b border-gray-700 hidden lg:block';
+                    dayHeader.textContent = currentDay;
+                    itineraryList.appendChild(dayHeader);
+                }
+                const card = document.createElement('div');
+                card.className = 'flex items-center bg-gray-800 p-2 lg:p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent transform hover:-translate-y-1';
+                card.dataset.index = index;
+
+                card.innerHTML = `
+                    <div class="w-full lg:w-auto flex lg:items-center">
+                        <div class="lg:w-24 text-center lg:text-right lg:pr-4">
+                             <p class="font-bold text-amber-400">${item.time}</p>
+                        </div>
+                        <div class="flex-grow hidden lg:block">
+                            <h3 class="font-semibold text-lg text-gray-200">${item.title}</h3>
+                            <p class="text-gray-400 text-sm">${item.location}</p>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    renderDetailView(index);
+                    document.querySelectorAll('#itinerary-list > div[data-index]').forEach(c => c.classList.remove('active-item'));
+                    card.classList.add('active-item');
+                });
+                itineraryList.appendChild(card);
+            });
+        }
+
+        function renderDetailView(index) {
+            const item = itineraryData[index];
+
+            document.getElementById('detail-title').textContent = item.title;
+            document.getElementById('detail-time-location').textContent = `${item.day} at ${item.time} • ${item.location}`;
+            document.getElementById('detail-description').textContent = item.description;
+
+            const notesContainer = document.getElementById('detail-notes-container');
+            const notesEl = document.getElementById('detail-notes');
+            if (item.notes) {
+                notesEl.innerHTML = item.notes;
+                notesContainer.classList.remove('hidden');
+            } else {
+                notesContainer.classList.add('hidden');
+            }
+
+            const linksContainer = document.getElementById('detail-links');
+            linksContainer.innerHTML = ''; 
+
+            const calendarLink = generateGoogleCalendarLink(item);
+            if (calendarLink !== '#') {
+                 linksContainer.appendChild(createLinkElement({ name: 'Add to Google Calendar', url: calendarLink, type: 'calendar' }));
+            }
+           
+            if (item.links && item.links.length > 0) {
+                item.links.forEach(link => {
+                    linksContainer.appendChild(createLinkElement(link));
+                });
+            }
+        }
+        
+        function createLinkElement(link) {
+            const linkElement = document.createElement('a');
+            linkElement.href = link.url;
+            if (!link.url.startsWith('tel:')) {
+                linkElement.target = '_blank';
+                linkElement.rel = 'noopener noreferrer';
+            }
+            linkElement.className = 'flex items-center p-3 bg-gray-900 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700';
+            
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'text-amber-400 mr-4';
+            iconSpan.innerHTML = icons[link.type] || icons.website;
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'font-semibold text-amber-400';
+            nameSpan.textContent = link.name;
+            
+            linkElement.appendChild(iconSpan);
+            linkElement.appendChild(nameSpan);
+            return linkElement;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderItineraryList();
+            renderDetailView(0);
+            const firstItem = document.querySelector('#itinerary-list > div[data-index="0"]');
+            if(firstItem) {
+                firstItem.classList.add('active-item');
+            }
+        });
+    </script>
+</body>
+</html>
