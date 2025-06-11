@@ -162,9 +162,9 @@
                 title: 'Dinner Reservation at Uchiko',
                 location: 'A short drive away',
                 address: '4200 N Lamar Blvd, Austin, TX 78756',
-                description: 'Prepare your taste buds for an acclaimed and innovative Japanese dining experience. The cost is fully covered.',
+                description: 'Prepare your taste buds and spare no expense - The cost is fully covered.',
                 duration: 120,
-                notes: "Reservation #4MVN7F32J6RT (booked under Nashid Braswell)<br>Spare no expense or indulgence - the cost will be fully covered.",
+                notes: "Reservation #4MVN7F32J6RT (booked under Nashid Braswell)",
                 links: [
                     { name: 'Visit Restaurant Website', url: 'https://uchiko.uchirestaurants.com/location/sushi-austin/', type: 'website' },
                     { name: 'View Menu', url: 'https://uchiko.uchirestaurants.com/location/sushi-austin/menu/', type: 'menu' },
@@ -280,15 +280,15 @@
                     itineraryList.appendChild(dayHeader);
                 }
                 const card = document.createElement('div');
-                card.className = 'flex items-center bg-gray-800 p-2 lg:p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent transform hover:-translate-y-1';
+                card.className = 'flex items-start bg-gray-800 p-2 lg:p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent transform hover:-translate-y-1';
                 card.dataset.index = index;
 
                 card.innerHTML = `
-                    <div class="w-full lg:w-auto flex lg:items-center">
-                        <div class="lg:w-24 text-center lg:text-right lg:pr-4">
-                             <p class="font-bold text-amber-400">${item.time}</p>
+                    <div class="lg:grid lg:grid-cols-[max-content_1fr] lg:gap-x-4 w-full">
+                        <div class="text-center lg:text-left">
+                            <p class="font-bold text-amber-400">${item.time}</p>
                         </div>
-                        <div class="flex-grow hidden lg:block">
+                        <div class="hidden lg:block">
                             <h3 class="font-semibold text-lg text-gray-200">${item.title}</h3>
                             <p class="text-gray-400 text-sm">${item.location}</p>
                         </div>
