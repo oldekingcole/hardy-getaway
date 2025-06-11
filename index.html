@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Getaway</title>
+    <title>Hardy Getaway</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
 
     <div class="max-w-6xl mx-auto">
         <header class="text-center py-12 px-4 mb-8 rounded-b-xl header-bg shadow-2xl">
-            <h1 class="text-4xl sm:text-5xl font-serif font-bold text-white tracking-wider">A Special Getaway</h1>
+            <h1 class="text-4xl sm:text-5xl font-serif font-bold text-white tracking-wider">Hardy Getaway</h1>
             <p class="mt-3 text-lg text-gray-300">A Gift of Appreciation for our Pastor & First Lady</p>
         </header>
         
@@ -48,10 +48,10 @@
 
             <!-- Detail View (Main content) -->
             <div id="detail-view-container" class="flex-grow">
-                 <div id="detail-view" class="bg-gray-800 p-5 sm:p-6 rounded-xl shadow-lg space-y-6 sticky top-6">
+                 <div id="detail-view" class="bg-gray-800 p-5 sm:p-6 rounded-xl shadow-lg sticky top-6">
                     <!-- Detail Content (populated by JS) -->
-                    <div id="detail-content">
-                        <header class="mb-6">
+                    <div id="detail-content" class="space-y-6">
+                        <header>
                             <h2 id="detail-title" class="text-3xl sm:text-4xl font-serif font-bold text-white"></h2>
                             <p id="detail-time-location" class="text-md text-gray-400 mt-2"></p>
                         </header>
@@ -76,6 +76,17 @@
         const itineraryData = [
             {
                 day: 'Friday, June 13th',
+                time: '10:30 AM',
+                title: 'Morning Departure',
+                location: "Home",
+                address: null,
+                description: 'Min. Arielle will pick you up from home and take you to the greatest coffee shop in the world to start your day right!',
+                duration: 15,
+                notes: null,
+                links: []
+            },
+            {
+                day: 'Friday, June 13th',
                 time: '10:45 AM',
                 title: 'Chauffeur Pick-up',
                 location: "Judah's Java",
@@ -96,7 +107,7 @@
                 address: '200 Lavaca St, Austin, TX 78701',
                 description: 'Arrive at the W Austin Hotel where your special room has been arranged and stocked for you. Your reservation is on file at the front desk.',
                 duration: 15,
-                notes: "Reservation information will be provided separately.",
+                notes: "Confirmation #71530511",
                 links: [
                     { name: 'Visit Hotel Website', url: 'https://www.marriott.com/en-us/hotels/auswh-w-austin/', type: 'website' },
                     { name: 'View on Map', url: 'https://maps.google.com/?q=200+Lavaca+St,+Austin,+TX+78701', type: 'map' }
@@ -173,7 +184,7 @@
             {
                 day: 'Saturday, June 14th',
                 time: '12:00 PM',
-                title: 'Hotel Check-Out & Drop-Off',
+                title: 'Chauffeur Pick-up',
                 location: 'W Hotel Lobby',
                 address: '200 Lavaca St, Austin, TX 78701',
                 description: "After a restful morning, your driver will be ready to take you back to Judah's Java. Afterwards, the Sabbath is yours to enjoy together.",
